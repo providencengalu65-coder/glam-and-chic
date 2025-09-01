@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glam&Chic</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Georgia', serif;
+      background: linear-gradient(135deg, #000000, #1a1a1a);
+      color: #ffd700;
+      text-align: center;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-size: 3.5em;
+      margin: 20px 0;
+      font-family: 'Brush Script MT', cursive;
+      color: gold;
+      text-shadow: 0 0 10px #ffd700, 0 0 20px #ffa500;
+    }
+    h2 {
+      margin: 20px 0 10px;
+      font-size: 2em;
+      text-decoration: underline;
+      color: #ffd700;
+    }
+    .category {
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 600px;
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      background: rgba(255, 215, 0, 0.05);
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      background: gold;
+      color: black;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+    button:hover {
+      transform: scale(1.1);
+      background: #ffa500;
+    }
+    footer {
+      margin-top: 40px;
+      padding: 20px;
+      font-size: 1.2em;
+      color: gold;
+      text-shadow: 0 0 5px #ffd700;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      z-index: 1000;
+      color: gold;
+      text-align: center;
+      font-family: 'Brush Script MT', cursive;
+    }
+    .overlay h2 {
+      font-size: 3em;
+      margin-bottom: 20px;
+    }
+    .overlay button {
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="welcomeOverlay">
+    <h2>✨ Bienvenue sur Glam&Chic ✨</h2>
+    <p>Participez au vote et célébrez l'élégance ✨</p>
+    <button onclick="closeWelcome()">Entrer</button>
+  </div>
+
+  <h1>Glam&Chic</h1>
+
+  <div class="category" id="cat1">
+    <h2>Meilleure promotion</h2>
+    <button onclick="vote('C.S Mgr MOKE', 'cat1')">C.S Mgr MOKE</button>
+    <button onclick="vote('COLLEGE SAINT ANDRE', 'cat1')">COLLEGE SAINT ANDRE</button>
+    <button onclick="vote('SAINT PIE X', 'cat1')">SAINT PIE X</button>
+  </div>
+
+  <div class="category" id="cat2">
+    <h2>Meilleur(e) président(e)</h2>
+    <button onclick="vote('MUPANDE JEAN-FELIX DAVID - Mgr MOKE', 'cat2')">MUPANDE JEAN-FELIX DAVID</button>
+    <button onclick="vote('LEPU LUNDU ELIEL - College St Andre', 'cat2')">LEPU LUNDU ELIEL</button>
+    <button onclick="vote('LUTETE ANTHONY - Saint PIE X', 'cat2')">LUTETE ANTHONY</button>
+  </div>
+
+  <footer>
+    Tous droits réservés © Ngalu Winner
+  </footer>
+
+  <div class="overlay" id="byeOverlay" style="display:none;">
+    <h2>🙏 Merci d'avoir voté !</h2>
+    <p>Votre participation rend Glam&Chic encore plus spécial 💛</p>
+    <p>✨ À bientôt et au revoir ✨</p>
+  </div>
+
+  <script>
+    // Récupération du vote depuis localStorage
+    let votes = JSON.parse(localStorage.getItem('votes')) || { cat1: false, cat2: false };
+
+    // Fonction pour fermer le message de bienvenue
+    function closeWelcome() {
+      document.getElementById('welcomeOverlay').style.display = 'none';
+    }
+
+    // Fonction vote avec localStorage
+    function vote(choice, category) {
+      if (votes[category]) return; // déjà voté → verrouillage silencieux
+
+      votes[category] = true;
+      localStorage.setItem('votes', JSON.stringify(votes));
+
+      // Verrouillage des boutons de la catégorie
+      let parent = document.getElementById(category);
+      parent.querySelectorAll('button').forEach(btn => {
+        btn.disabled = true;
+        btn.style.opacity = "0.6";
+      });
+
+      // Affichage message de fin si les deux votes faits
+      if (votes.cat1 && votes.cat2) {
+        document.getElementById('byeOverlay').style.display = 'flex';
+      }
+    }
+
+    // Au chargement, verrouille les boutons déjà votés
+    window.onload = () => {
+      for (const cat in votes) {
+        if (votes[cat]) {
+          document.getElementById(cat).querySelectorAll('button').forEach(btn => {
+            btn.disabled = true;
+            btn.style.opacity = "0.6";
+          });
+        }
+      }
+    }
+  </script>
+</body>
+</html>
